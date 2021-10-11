@@ -2,6 +2,8 @@
 
 (when (modulep! +light)
   (load! "+light"))
+(when (modulep! +nyan)
+  (load! "+nyan"))
 
 
 (use-package! doom-modeline
