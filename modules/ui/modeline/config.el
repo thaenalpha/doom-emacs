@@ -2,6 +2,8 @@
 
 (when (featurep! +light)
   (load! "+light"))
+(when (featurep! +nyan)
+  (load! "+nyan"))
 
 
 (use-package! doom-modeline

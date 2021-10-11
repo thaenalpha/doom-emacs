@@ -80,7 +80,9 @@ side of the modeline, and whose CDR is the right-hand side.")
     "Track the active modeline's window in `+modeline--active-window'."
     (let ((win (selected-window)))
       (unless (minibuffer-window-active-p win)
-        (setq +modeline--active-window (frame-selected-window))))))
+        (setq +modeline--active-window (frame-selected-window))
+        (when (featurep! +nyan) (+nyan-fit-bar-length))))))
+
 
 (defun +modeline--make-xpm (color width height)
   "Create an XPM bitmap via COLOR, WIDTH and HEIGHT. Inspired by `powerline''s `pl/+modeline--make-xpm'."
@@ -597,6 +599,7 @@ lines are selected, or the NxM dimensions of a block selection.")
           (cons
            "" '(+modeline-bar
                 +modeline-format-left
+                (when (featurep! +nyan) (:eval (list (nyan-create))))
                 (:eval
                  (propertize
                   " "

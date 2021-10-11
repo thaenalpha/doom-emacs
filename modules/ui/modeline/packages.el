@@ -7,3 +7,5 @@
 (package! anzu :pin "5abb37455ea44fa401d5f4c1bdc58adb2448db67")
 (when (featurep! :editor evil)
   (package! evil-anzu :pin "d3f6ed4773b48767bd5f4708c7f083336a8a8a86"))
+(when (featurep! +nyan)
+  (package! nyan-mode :pin "09904af23adb839c6a9c1175349a1fb67f5b4370"))
