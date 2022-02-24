@@ -2,8 +2,6 @@
 
 (when (modulep! +light)
   (load! "+light"))
-(when (modulep! +nyan)
-  (load! "+nyan"))
 
 
 (use-package! doom-modeline
@@ -85,3 +83,6 @@
     :when (modulep! :editor evil)
     :after-call evil-ex-start-search evil-ex-start-word-search evil-ex-search-activate-highlight
     :config (global-anzu-mode +1)))
+
+(when (modulep! +nyan)
+  (load! "+nyan"))
