@@ -73,6 +73,7 @@ Fixes #3939: unsortable dired entries on Windows."
 
 (use-package! diff-hl
   :when (featurep! :ui vc-gutter)
+  :unless (featurep! +dirvish)
   :hook (dired-mode-hook . diff-hl-margin-local-mode)
   :init
   (unless (featurep! :ui vc-gutter +diff-hl)
@@ -138,17 +139,22 @@ we have to clean it up ourselves."
 
 
 (use-package! dirvish
-  :when (featurep! +dirvish)
   :defer t
-  :init (after! dired (dirvish-override-dired-mode))
-  :hook (dired-mode . dired-omit-mode)
+  :when (featurep! +dirvish)
+  :init (dirvish-override-dired-mode)
   :config
+  (when (featurep! :ui tabs)
+    (after! centaur-tabs
+          (add-hook! 'dirvish-mode-hook 'centaur-tabs-local-mode)))
   (setq dirvish-cache-dir (concat doom-cache-dir "dirvish/")
         dirvish-hide-details nil
-        dirvish-attributes '(git-msg)
-        dired-omit-files (concat dired-omit-files "\\|^\\..*$"))
+        dirvish-attributes '(git-msg vc-state file-size))
+  (setq dirvish-mode-line-format
+   '(:left (sort file-time " " file-size symlink) :right (omit yank index)))
   (when (featurep! +icons)
     (push 'all-the-icons dirvish-attributes))
+  ;; (when (featurep! ui: tabs)
+  ;;   (add-hook! 'dirvish-mode-hook (centaur-tabs-local-mode)))
   (map! :map dirvish-mode-map
         :n "b" #'dirvish-goto-bookmark
         :n "z" #'dirvish-show-history
@@ -156,8 +162,12 @@ we have to clean it up ourselves."
         :n "F" #'dirvish-toggle-fullscreen
         :n "l" #'dired-find-file
         :n "h" #'dired-up-directory
+        :n "?" #'dirvish-dispatch
+        :n "q" #'dirvish-quit
         :localleader
-        "h" #'dired-omit-mode))
+        "h" #'dired-omit-mode)
+  (global-set-key [remap find-dired] #'dirvish-fd)
+  (set-popup-rule! "^ \\*Dirvish.*" :ignore t))
 
 
 (use-package! all-the-icons-dired
@@ -185,7 +195,6 @@ we have to clean it up ourselves."
 
 
 (use-package! dired-x
-  :unless (featurep! +dirvish)
   :unless (featurep! +ranger)
   :hook (dired-mode . dired-omit-mode)
   :config
@@ -222,6 +231,7 @@ we have to clean it up ourselves."
 
 (use-package! fd-dired
   :when doom-projectile-fd-binary
+  :unless (featurep! +dirvish)
   :defer t
   :init
   (global-set-key [remap find-dired] #'fd-dired)
